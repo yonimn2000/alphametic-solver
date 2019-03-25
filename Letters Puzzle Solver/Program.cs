@@ -7,23 +7,29 @@ namespace Letters_Puzzle_Solver
     class Program
     {
         static Dictionary<char, int> letterNumberPairs = new Dictionary<char, int>();
-        static readonly string input1 = "SEND";
-        static readonly string input2 = "MORE";
+        static readonly string[] inputs = { "SEND", "MORE" };
         static readonly string equals = "MONEY";
-  
+        //static readonly string[] inputs = { "ABC", "ABC", "ABC" };
+        //static readonly string equals = "CCC";
+
         static void Main(string[] args)
         {
+            Console.WriteLine("Please wait...");
+            System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
             CreateLetterNumberPairsList();
             Solve();
+            watch.Stop();
+            Console.WriteLine("Computation time: " + watch.Elapsed);
             Console.ReadKey();
         }
 
         static void CreateLetterNumberPairsList()
         {
-            AddUniqueLettersToListFromString(input1);
-            AddUniqueLettersToListFromString(input2);
+            foreach (string input in inputs)
+                AddUniqueLettersToListFromString(input);
             AddUniqueLettersToListFromString(equals);
         }
+
         static void AddUniqueLettersToListFromString(string str)
         {
             foreach (char letter in str)
@@ -35,12 +41,7 @@ namespace Letters_Puzzle_Solver
                             break;
                         }
         }
-        int Factorial(int i)
-        {
-            if (i <= 1)
-                return 1;
-            return i * Factorial(i - 1);
-        }
+
         static string numberString = "";
         static void Solve()
         {
@@ -59,8 +60,9 @@ namespace Letters_Puzzle_Solver
             if (solutionCounter == 0)
                 Console.WriteLine("Cannot solve...");
             else
-                Console.WriteLine($"Done ({solutionCounter} solutions)");
+                Console.WriteLine($"Done ({solutionCounter} solution(s))");
         }
+
         static void SetNextPossibility()
         {
             List<int> numbers = letterNumberPairs.Values.ToList();
@@ -77,6 +79,7 @@ namespace Letters_Puzzle_Solver
             for (int i = 0; i < letterNumberPairs.Count; i++)
                 letterNumberPairs[letterNumberPairs.Keys.ElementAt(i)] = (int)numberString[i] - 48;
         }
+
         static bool IsStringUnique(string str)
         {
             for (int i = 0; i < str.Length; i++)
@@ -84,13 +87,19 @@ namespace Letters_Puzzle_Solver
                     return false;
             return true;
         }
+
         static bool IsSolutionCorrect(bool noZeros = false)
         {
-            return (GetNumberFromString(input1) + GetNumberFromString(input2)) == GetNumberFromString(equals)
-                && GetNumberFromString(input1.Substring(0, 1)) != 0
-                && GetNumberFromString(input2.Substring(0, 1)) != 0
-                && GetNumberFromString(equals.Substring(0, 1)) != 0;
+            bool isNoLeadingZerosOnInputs = true;
+            int sumOfInputs = 0;
+            foreach (string input in inputs)
+            {
+                sumOfInputs += GetNumberFromString(input);
+                isNoLeadingZerosOnInputs = isNoLeadingZerosOnInputs && GetNumberFromString(input.Substring(0, 1)) != 0;
+            }
+            return sumOfInputs == GetNumberFromString(equals) && GetNumberFromString(equals.Substring(0, 1)) != 0 && isNoLeadingZerosOnInputs;
         }
+
         static int GetNumberFromString(string str)
         {
             int output = 0;
@@ -107,7 +116,11 @@ namespace Letters_Puzzle_Solver
 
         static void PrintSolution()
         {
-            Console.WriteLine(GetNumberFromString(input1) + " + " + GetNumberFromString(input2) + " = " + GetNumberFromString(equals));
+            Console.WriteLine(String.Join(" + ", inputs) + " = " + equals);
+            int[] solutions = new int[inputs.Length];
+            for (int i = 0; i < solutions.Length; i++)
+                solutions[i] = GetNumberFromString(inputs[i]);
+            Console.WriteLine(String.Join(" + ", solutions) + " = " + GetNumberFromString(equals));
         }
     }
 }
