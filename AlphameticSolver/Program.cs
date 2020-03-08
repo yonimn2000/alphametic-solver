@@ -2,15 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Letters_Puzzle_Solver
+namespace YonatanMankovich.AlphametricSolver
 {
     class Program
     {
-        static Dictionary<char, int> letterNumberPairs = new Dictionary<char, int>();
+        static readonly Dictionary<char, int> letterNumberPairs = new Dictionary<char, int>();
         static readonly string[] inputs = { "SEND", "MORE" };
         static readonly string equals = "MONEY";
         //static readonly string[] inputs = { "ABC", "ABC", "ABC" };
         //static readonly string equals = "CCC";
+        //static readonly string[] inputs = { "A", "A", "A", "B", "B", "B", "B" };
+        //static readonly string equals = "AB";
+        //static readonly string[] inputs = { "SO", "MANY", "MORE", "MEN", "SEEM", "TO", "SAY", "THAT", "THEY", "MAY", "SOON", "TRY", "TO", "STAY", "AT", "HOME", "SO", "AS", "TO", "SEE", "OR", "HEAR", "THE", "SAME", "ONE", "MAN", "TRY", "TO", "MEET", "THE", "TEAM", "ON", "THE", "MOON", "AS", "HE", "HAS", "AT", "THE", "OTHER", "TEN" };
+        //static readonly string equals = "TESTS";
+        //(The answer is TRANHYSMOE=9876543210.)
+        //static readonly string[] inputs = { "TAB", "TAB", "TAB", "TAB" };
+        //static readonly string equals = "BET";
+        //static readonly string[] inputs = { "NO", "GUN", "NO" };
+        //static readonly string equals = "HUNT";
 
         static void Main(string[] args)
         {
@@ -116,11 +125,11 @@ namespace Letters_Puzzle_Solver
 
         static void PrintSolution()
         {
-            Console.WriteLine(String.Join(" + ", inputs) + " = " + equals);
+            Console.WriteLine(string.Join(" + ", inputs) + " = " + equals);
             int[] solutions = new int[inputs.Length];
             for (int i = 0; i < solutions.Length; i++)
                 solutions[i] = GetNumberFromString(inputs[i]);
-            Console.WriteLine(String.Join(" + ", solutions) + " = " + GetNumberFromString(equals));
+            Console.WriteLine(string.Join(" + ", solutions) + " = " + GetNumberFromString(equals));
         }
     }
 }

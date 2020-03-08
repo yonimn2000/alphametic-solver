@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{64150CD1-8BC3-4FCF-B2E1-D490DE394466}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Letters_Puzzle_Solver</RootNamespace>
-    <AssemblyName>Letters Puzzle Solver</AssemblyName>
+    <RootNamespace>YonatanMankovich.AlphametricSolver</RootNamespace>
+    <AssemblyName>YonatanMankovich.AlphametricSolver</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Equation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
