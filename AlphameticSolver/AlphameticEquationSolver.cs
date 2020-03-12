@@ -13,26 +13,15 @@ namespace YonatanMankovich.AlphametricSolver
         public AlphameticEquationSolver(AlphameticEquation equation)
         {
             Equation = equation;
-            CreateLetterNumberPairsList();
+            CreateLetterNumberPairs();
         }
 
-        private void CreateLetterNumberPairsList()
+        private void CreateLetterNumberPairs()
         {
-            foreach (string term in Equation.Terms)
-                AddUniqueLettersToListFromString(term);
-            AddUniqueLettersToListFromString(Equation.EqualsPart);
-        }
-
-        private void AddUniqueLettersToListFromString(string str)
-        {
-            foreach (char letter in str)
-                if (!LetterNumberPairs.ContainsKey(letter))
-                    for (byte i = 0; i < 10; i++)
-                        if (!LetterNumberPairs.ContainsValue(i))
-                        {
-                            LetterNumberPairs.Add(letter, i);
-                            break;
-                        }
+            byte c = 0; // This is used to create the smallest unique number: 0123...
+            foreach (char letter in Equation.ToString().Where(char.IsLetter))
+                if (!LetterNumberPairs.ContainsKey(letter)) // Add only unique letters.
+                    LetterNumberPairs.Add(letter, c++);
         }
 
         string numberString = "";
@@ -75,22 +64,26 @@ namespace YonatanMankovich.AlphametricSolver
 
         private bool IsStringUnique(string str)
         {
-            for (int i = 0; i < str.Length; i++)
-                if (str.Count(letter => letter == str[i]) > 1)
-                    return false;
+            for (int firstCharIndex = 0; firstCharIndex < str.Length; firstCharIndex++)
+                for (int secondCharIndex = firstCharIndex + 1; secondCharIndex < str.Length; secondCharIndex++)
+                    if (str[firstCharIndex] == str[secondCharIndex])
+                        return false;
             return true;
         }
 
         private bool IsSolutionCorrect()
         {
+            // TODO: Add other math operators (-*/).
             bool isNoLeadingZerosOnInputs = true;
-            int sumOfInputs = 0;
+            int sumOfTerms = 0;
             foreach (string term in Equation.Terms)
             {
-                sumOfInputs += GetNumberFromString(term);
+                sumOfTerms += GetNumberFromString(term);
                 isNoLeadingZerosOnInputs = isNoLeadingZerosOnInputs && GetNumberFromString(term.Substring(0, 1)) != 0;
             }
-            return sumOfInputs == GetNumberFromString(Equation.EqualsPart) && GetNumberFromString(Equation.EqualsPart.Substring(0, 1)) != 0 && isNoLeadingZerosOnInputs;
+            return sumOfTerms == GetNumberFromString(Equation.EqualsPart)
+                && GetNumberFromString(Equation.EqualsPart.Substring(0, 1)) != 0
+                && isNoLeadingZerosOnInputs;
         }
 
         private int GetNumberFromString(string str)

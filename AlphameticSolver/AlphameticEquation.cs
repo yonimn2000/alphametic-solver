@@ -7,10 +7,10 @@ namespace YonatanMankovich.AlphametricSolver
     public class AlphameticEquation
     {
         public string EqualsPart { get; set; }
-        public IList<string> Terms { get; set; } = new List<string>();
-        public IList<MathOperators> Operators { get; set; } = new List<MathOperators>();
+        public IList<string> Terms { get; } = new List<string>();
+        public IList<MathOperators> Operators { get; } = new List<MathOperators>();
 
-        public AlphameticEquation (string input)
+        public AlphameticEquation(string input)
         {
             input = input.ToUpper();
 
@@ -27,21 +27,15 @@ namespace YonatanMankovich.AlphametricSolver
 
             MatchCollection operatorMatches = Regex.Matches(equationSides[0], @"[+\-/*]"); // Get all operators.
             foreach (Match operatorMatch in operatorMatches)
-                Operators.Add(GetOperatorFromString(operatorMatch.Value));
+                Operators.Add(MathOperatorsMethods.GetOperatorFromString(operatorMatch.Value));
         }
 
-        private static MathOperators GetOperatorFromString(string input)
+        public override string ToString()
         {
-            switch (input)
-            {
-                case "+": return MathOperators.Add;
-                case "-": return MathOperators.Subtract;
-                case "*": return MathOperators.Multiply;
-                case "/": return MathOperators.Divide;
-                default: throw new FormatException(input + " is an invalid math operator.");
-            }
+            string output = "";
+            for (int i = 0; i < Terms.Count - 1; i++)
+                output += Terms[i] + MathOperatorsMethods.OperatorToString(Operators[i]);
+            return output + Terms[Terms.Count - 1] + "=" + EqualsPart;
         }
     }
-
-    public enum MathOperators { Add, Subtract, Multiply, Divide }
 }

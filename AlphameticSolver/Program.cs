@@ -22,6 +22,5 @@ namespace YonatanMankovich.AlphametricSolver
             Console.WriteLine("Computation time: " + watch.Elapsed);
             Console.ReadKey();
         }
-
     }
 }
