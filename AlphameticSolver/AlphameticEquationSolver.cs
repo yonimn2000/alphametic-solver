@@ -13,7 +13,26 @@ namespace YonatanMankovich.AlphametricSolver
         public AlphameticEquationSolver(AlphameticEquation equation)
         {
             Equation = equation;
+        }
+
+        public void Solve()
+        {
             CreateLetterNumberPairs();
+            int solutionCounter = 0;
+            for (long i = 0; i < Math.Pow(9, LetterNumberPairs.Count); i++)
+            {
+                if (IsSolutionCorrect())
+                {
+                    PrintSolution();
+                    solutionCounter++;
+                }
+                if (SetNextPossibility().Length > LetterNumberPairs.Count)
+                    break;
+            }
+            if (solutionCounter == 0)
+                Console.WriteLine("Cannot solve...");
+            else
+                Console.WriteLine($"Done ({solutionCounter} solution{(solutionCounter > 1 ? "s" : "")})");
         }
 
         private void CreateLetterNumberPairs()
@@ -24,32 +43,10 @@ namespace YonatanMankovich.AlphametricSolver
                     LetterNumberPairs.Add(letter, c++);
         }
 
-        string numberString = "";
-        public void Solve()
+        private string SetNextPossibility()
         {
-            int solutionCounter = 0;
-            for (long i = 0; i < Math.Pow(9, LetterNumberPairs.Count); i++)
-            {
-                if (IsSolutionCorrect())
-                {
-                    PrintSolution();
-                    solutionCounter++;
-                }
-                if (numberString.Length > LetterNumberPairs.Count)
-                    break;
-                SetNextPossibility();
-            }
-            if (solutionCounter == 0)
-                Console.WriteLine("Cannot solve...");
-            else
-                Console.WriteLine($"Done ({solutionCounter} solution(s))");
-        }
-
-        private void SetNextPossibility()
-        {
-            List<byte> numbers = LetterNumberPairs.Values.ToList();
-            long number = long.Parse(string.Join("", numbers.ToArray()));
-            numberString = "";
+            long number = long.Parse(string.Join("", LetterNumberPairs.Values.ToArray()));
+            string numberString;
             do
             {
                 number++;
@@ -60,30 +57,35 @@ namespace YonatanMankovich.AlphametricSolver
             } while (!IsStringUnique(numberString));
             for (int i = 0; i < LetterNumberPairs.Count; i++)
                 LetterNumberPairs[LetterNumberPairs.Keys.ElementAt(i)] = (byte)(numberString[i] - 48);
+            return numberString;
         }
 
-        private bool IsStringUnique(string str)
+        private bool IsStringUnique(string inputString)
         {
-            for (int firstCharIndex = 0; firstCharIndex < str.Length; firstCharIndex++)
-                for (int secondCharIndex = firstCharIndex + 1; secondCharIndex < str.Length; secondCharIndex++)
-                    if (str[firstCharIndex] == str[secondCharIndex])
+            for (int firstCharIndex = 0; firstCharIndex < inputString.Length - 1; firstCharIndex++)
+                for (int secondCharIndex = firstCharIndex + 1; secondCharIndex < inputString.Length; secondCharIndex++)
+                    if (inputString[firstCharIndex] == inputString[secondCharIndex])
                         return false;
             return true;
         }
 
         private bool IsSolutionCorrect()
         {
-            // TODO: Add other math operators (-*/).
-            bool isNoLeadingZerosOnInputs = true;
+            // TODO: Add other math operators (-/*).
             int sumOfTerms = 0;
             foreach (string term in Equation.Terms)
-            {
                 sumOfTerms += GetNumberFromString(term);
-                isNoLeadingZerosOnInputs = isNoLeadingZerosOnInputs && GetNumberFromString(term.Substring(0, 1)) != 0;
-            }
-            return sumOfTerms == GetNumberFromString(Equation.EqualsPart)
-                && GetNumberFromString(Equation.EqualsPart.Substring(0, 1)) != 0
-                && isNoLeadingZerosOnInputs;
+            return sumOfTerms == GetNumberFromString(Equation.EqualsPart) && IsNoLeadingZeroInTerms();
+        }
+
+        private bool IsNoLeadingZeroInTerms()
+        {
+            if(LetterNumberPairs[Equation.EqualsPart[0]] == 0)
+                return false;
+            foreach (string term in Equation.Terms)
+                if (LetterNumberPairs[term[0]] == 0)
+                    return false;
+            return true;
         }
 
         private int GetNumberFromString(string str)

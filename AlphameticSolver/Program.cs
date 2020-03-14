@@ -14,12 +14,16 @@ namespace YonatanMankovich.AlphametricSolver
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Please wait...");
-            System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-            AlphameticEquationSolver alphameticEquationSolver = new AlphameticEquationSolver(new AlphameticEquation(equations[4]));
-            alphameticEquationSolver.Solve();
-            watch.Stop();
-            Console.WriteLine("Computation time: " + watch.Elapsed);
+            for (int i = 0; i < 10; i++)
+            {
+                Console.WriteLine("Please wait...");
+                System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
+                AlphameticEquationSolver alphameticEquationSolver = new AlphameticEquationSolver(new AlphameticEquation(equations[4]));
+                alphameticEquationSolver.Solve();
+                watch.Stop();
+                Console.WriteLine("Computation time: " + watch.Elapsed);
+                Console.WriteLine();
+            }
             Console.ReadKey();
         }
     }
