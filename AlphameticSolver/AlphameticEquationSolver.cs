@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace YonatanMankovich.AlphametricSolver
 {
@@ -10,63 +9,64 @@ namespace YonatanMankovich.AlphametricSolver
         private AlphameticEquation Equation { get; set; }
         private Dictionary<char, byte> LetterNumberPairs { get; set; } = new Dictionary<char, byte>();
 
-        public AlphameticEquationSolver(AlphameticEquation equation)
+        public bool IsUnique { get; set; }
+        public bool AllowLeadingZeros { get; set; }
+
+        public AlphameticEquationSolver(AlphameticEquation equation, bool isSolutionUniqe, bool allowLeadingZeros)
         {
             Equation = equation;
+            IsUnique = isSolutionUniqe;
+            AllowLeadingZeros = allowLeadingZeros;
         }
 
         public void Solve()
         {
             CreateLetterNumberPairs();
             int solutionCounter = 0;
-            for (long i = 0; i < Math.Pow(9, LetterNumberPairs.Count); i++)
+            for (long currentNumber = 0; currentNumber < Math.Pow(10, LetterNumberPairs.Count); currentNumber++)
             {
-                if (IsSolutionCorrect())
+                SetSolution(currentNumber);
+                if ((!IsUnique || (IsUnique && IsSolutionUnique()))
+                    && (AllowLeadingZeros || (!AllowLeadingZeros && IsNoLeadingZeroInTerms()))
+                    && IsSolutionCorrect())
                 {
                     PrintSolution();
                     solutionCounter++;
                 }
-                if (SetNextPossibility().Length > LetterNumberPairs.Count)
-                    break;
             }
             if (solutionCounter == 0)
                 Console.WriteLine("Cannot solve...");
             else
-                Console.WriteLine($"Done ({solutionCounter} solution{(solutionCounter > 1 ? "s" : "")})");
+                Console.WriteLine($"Done ({solutionCounter}{(IsUnique ? " unique" : "")} solution{(solutionCounter > 1 ? "s" : "")})");
+        }
+
+        private bool IsSolutionUnique()
+        {
+            byte[] numbers = LetterNumberPairs.Values.ToArray();
+            bool[] exists = new bool[10];
+            for (int i = 0; i < exists.Length; i++)
+                exists[i] = false;
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                if (exists[numbers[i]])
+                    return false;
+                exists[numbers[i]] = true;
+            }
+            return true;
         }
 
         private void CreateLetterNumberPairs()
         {
-            byte c = 0; // This is used to create the smallest unique number: 0123...
             foreach (char letter in Equation.ToString().Where(char.IsLetter))
                 if (!LetterNumberPairs.ContainsKey(letter)) // Add only unique letters.
-                    LetterNumberPairs.Add(letter, c++);
+                    LetterNumberPairs.Add(letter, 0);
         }
 
-        private string SetNextPossibility()
+        private void SetSolution(long number)
         {
-            long number = long.Parse(string.Join("", LetterNumberPairs.Values.ToArray()));
-            string numberString;
-            do
-            {
-                number++;
-                if (number.ToString().Length < LetterNumberPairs.Count)
-                    numberString = "0" + number.ToString();
-                else
-                    numberString = number.ToString();
-            } while (!IsStringUnique(numberString));
+            string numberString = number.ToString("D" + LetterNumberPairs.Count);
             for (int i = 0; i < LetterNumberPairs.Count; i++)
                 LetterNumberPairs[LetterNumberPairs.Keys.ElementAt(i)] = (byte)(numberString[i] - 48);
-            return numberString;
-        }
-
-        private bool IsStringUnique(string inputString)
-        {
-            for (int firstCharIndex = 0; firstCharIndex < inputString.Length - 1; firstCharIndex++)
-                for (int secondCharIndex = firstCharIndex + 1; secondCharIndex < inputString.Length; secondCharIndex++)
-                    if (inputString[firstCharIndex] == inputString[secondCharIndex])
-                        return false;
-            return true;
         }
 
         private bool IsSolutionCorrect()
@@ -74,13 +74,13 @@ namespace YonatanMankovich.AlphametricSolver
             // TODO: Add other math operators (-/*).
             int sumOfTerms = 0;
             foreach (string term in Equation.Terms)
-                sumOfTerms += GetNumberFromString(term);
-            return sumOfTerms == GetNumberFromString(Equation.EqualsPart) && IsNoLeadingZeroInTerms();
+                sumOfTerms += int.Parse(TranslateAlphametic(term));
+            return sumOfTerms == int.Parse(TranslateAlphametic(Equation.EqualsPart));
         }
 
         private bool IsNoLeadingZeroInTerms()
         {
-            if(LetterNumberPairs[Equation.EqualsPart[0]] == 0)
+            if (LetterNumberPairs[Equation.EqualsPart[0]] == 0)
                 return false;
             foreach (string term in Equation.Terms)
                 if (LetterNumberPairs[term[0]] == 0)
@@ -88,12 +88,12 @@ namespace YonatanMankovich.AlphametricSolver
             return true;
         }
 
-        private int GetNumberFromString(string str)
+        private string TranslateAlphametic(string inputString)
         {
-            int output = 0;
-            for (int i = 0; i < str.Length; i++)
-                output += LetterNumberPairs[str[i]] * (int)Math.Pow(10, str.Length - 1 - i);
-            return output;
+            foreach (char character in inputString)
+                if (LetterNumberPairs.ContainsKey(character))
+                    inputString = inputString.Replace(character.ToString(), LetterNumberPairs[character].ToString());
+            return inputString;
         }
 
         private void PrintDictionary()
@@ -104,11 +104,9 @@ namespace YonatanMankovich.AlphametricSolver
 
         private void PrintSolution()
         {
-            Console.WriteLine(string.Join(" + ", Equation.Terms) + " = " + Equation.EqualsPart);
-            int[] solutions = new int[Equation.Terms.Count];
-            for (int i = 0; i < solutions.Length; i++)
-                solutions[i] = GetNumberFromString(Equation.Terms[i]);
-            Console.WriteLine(string.Join(" + ", solutions) + " = " + GetNumberFromString(Equation.EqualsPart));
+            Console.WriteLine(Equation.ToString());
+            Console.WriteLine(TranslateAlphametic(Equation.ToString()));
+            Console.WriteLine();
         }
     }
 }
