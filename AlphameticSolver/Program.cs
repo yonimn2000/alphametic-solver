@@ -18,8 +18,8 @@ namespace YonatanMankovich.AlphametricSolver
             {
                 Console.WriteLine("Please wait...");
                 System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-                AlphameticEquationSolver alphameticEquationSolver = new AlphameticEquationSolver(new AlphameticEquation(equations[4]), true, false);
-                alphameticEquationSolver.Solve();
+                AlphameticEquationSolver alphameticEquationSolver = new AlphameticEquationSolver();
+                alphameticEquationSolver.SolveEquation(new AlphameticEquation(equations[0]), true, false);
                 watch.Stop();
                 Console.WriteLine("Computation time: " + watch.Elapsed);
                 Console.WriteLine();
