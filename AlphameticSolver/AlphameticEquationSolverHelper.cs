@@ -19,6 +19,7 @@ namespace YonatanMankovich.AlphametricSolver
             AllowLeadingZeros = allowLeadingZeros;
             CreateLetterNumberPairs();
         }
+
         private void CreateLetterNumberPairs()
         {
             foreach (char letter in Equation.ToString().Where(char.IsLetter))
@@ -62,11 +63,10 @@ namespace YonatanMankovich.AlphametricSolver
 
         private bool IsSolutionCorrect()
         {
-            // TODO: Add other math operators (-/*).
-            int sumOfTerms = 0;
-            foreach (string term in Equation.Terms)
-                sumOfTerms += int.Parse(TranslateAlphametic(term, LetterNumberPairs));
-            return sumOfTerms == int.Parse(TranslateAlphametic(Equation.EqualsPart, LetterNumberPairs));
+            double result = int.Parse(TranslateAlphametic(Equation.Terms[0], LetterNumberPairs));
+            for (int i = 0; i < Equation.Operators.Count; i++)
+                result = MathOperatorsMethods.PerformOperation(result, int.Parse(TranslateAlphametic(Equation.Terms[i + 1], LetterNumberPairs)), Equation.Operators[i]);
+            return result == int.Parse(TranslateAlphametic(Equation.EqualsPart, LetterNumberPairs));
         }
 
         private bool IsNoLeadingZeroInTerms()

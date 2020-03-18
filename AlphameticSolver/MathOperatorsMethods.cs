@@ -30,7 +30,7 @@ namespace YonatanMankovich.AlphametricSolver
             }
         }
 
-        public static int PerformOperation(int left, int right, MathOperators mathOperator)
+        public static double PerformOperation(double left, double right, MathOperators mathOperator)
         {
             switch (mathOperator)
             {
@@ -38,7 +38,7 @@ namespace YonatanMankovich.AlphametricSolver
                 case MathOperators.Subtract: return left - right;
                 case MathOperators.Multiply: return left * right;
                 case MathOperators.Divide: return left / right;
-                default: throw new NotImplementedException();
+                default: throw new NotImplementedException("How did you even get here???");
             }
         }
     }
