@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace YonatanMankovich.AlphametricSolver
@@ -8,14 +9,13 @@ namespace YonatanMankovich.AlphametricSolver
         private AlphameticEquation Equation { get; }
         private Dictionary<char, byte> LetterNumberPairs { get; } = new Dictionary<char, byte>();
 
-        public bool IsUnique { get; set; }
+        public bool AllowRepeatingNumbers { get; set; }
         public bool AllowLeadingZeros { get; set; }
-        public List<Dictionary<char, byte>> Solutions { get; } = new List<Dictionary<char, byte>>();
 
-        public AlphameticEquationSolverHelper(AlphameticEquation equation, bool isSolutionUnique, bool allowLeadingZeros)
+        public AlphameticEquationSolverHelper(AlphameticEquation equation, bool allowRepeatingNumbers, bool allowLeadingZeros)
         {
             Equation = equation;
-            IsUnique = isSolutionUnique;
+            AllowRepeatingNumbers = allowRepeatingNumbers;
             AllowLeadingZeros = allowLeadingZeros;
             CreateLetterNumberPairs();
         }
@@ -26,15 +26,15 @@ namespace YonatanMankovich.AlphametricSolver
                     LetterNumberPairs.Add(letter, 0);
         }
 
-        public void Solve(long fromInclusive, long toExclusive)
+        public void Solve(long fromInclusive, long toExclusive, Action<AlphameticEquation, Dictionary<char, byte>> onSolutionFound)
         {
             for (long currentNumber = fromInclusive; currentNumber < toExclusive; currentNumber++)
             {
                 SetSolution(currentNumber);
-                if ((!IsUnique || (IsUnique && IsSolutionUnique()))
+                if ((!AllowRepeatingNumbers || (AllowRepeatingNumbers && IsSolutionUnique()))
                     && (AllowLeadingZeros || (!AllowLeadingZeros && IsNoLeadingZeroInTerms()))
                     && IsSolutionCorrect())
-                    Solutions.Add(LetterNumberPairs.ToDictionary(entry => entry.Key, entry => entry.Value));
+                    onSolutionFound(Equation, LetterNumberPairs.ToDictionary(entry => entry.Key, entry => entry.Value));
             }
         }
 

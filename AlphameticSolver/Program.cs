@@ -14,17 +14,34 @@ namespace YonatanMankovich.AlphametricSolver
 
         static void Main(string[] args)
         {
+            Console.WriteLine("Please wait...\n");
             for (int i = 0; i < 10; i++)
             {
-                Console.WriteLine("Please wait...");
                 System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
                 AlphameticEquationSolver alphameticEquationSolver = new AlphameticEquationSolver();
-                alphameticEquationSolver.SolveEquation(new AlphameticEquation(equations[0]), true, false);
+                alphameticEquationSolver.SolveEquation(new AlphameticEquation(equations[4]), true, false, PrintSolution);
                 watch.Stop();
                 Console.WriteLine("Computation time: " + watch.Elapsed);
                 Console.WriteLine();
             }
             Console.ReadLine();
+        }
+
+
+        /*public static void PrintDictionary(Dictionary<char, byte> letterNumberPairs)
+        {
+            foreach (KeyValuePair<char, byte> letterNumberPair in letterNumberPairs)
+                Console.WriteLine($"{letterNumberPair.Key} = {letterNumberPair.Value}");
+        }*/
+        static object printLock = new object();
+        public static void PrintSolution(AlphameticEquation equation, System.Collections.Generic.Dictionary<char, byte> letterNumberPairs)
+        {
+            lock (printLock)
+            {
+                Console.WriteLine(equation.ToString());
+                Console.WriteLine(AlphameticEquationSolverHelper.TranslateAlphametic(equation.ToString(), letterNumberPairs));
+                Console.WriteLine();
+            }
         }
     }
 }
