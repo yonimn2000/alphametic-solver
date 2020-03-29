@@ -11,12 +11,14 @@ namespace YonatanMankovich.AlphametricSolver
 
         public bool AllowRepeatingNumbers { get; set; }
         public bool AllowLeadingZeros { get; set; }
+        public bool FindOneSolutionOnly { get; set; }
 
-        public AlphameticEquationSolverHelper(AlphameticEquation equation, bool allowRepeatingNumbers, bool allowLeadingZeros)
+        public AlphameticEquationSolverHelper(AlphameticEquation equation, bool allowRepeatingNumbers, bool allowLeadingZeros, bool findOneSolutionOnly)
         {
             Equation = equation;
             AllowRepeatingNumbers = allowRepeatingNumbers;
             AllowLeadingZeros = allowLeadingZeros;
+            FindOneSolutionOnly = findOneSolutionOnly;
             CreateLetterNumberPairs();
         }
 
@@ -35,7 +37,11 @@ namespace YonatanMankovich.AlphametricSolver
                 if ((!AllowRepeatingNumbers || (AllowRepeatingNumbers && IsSolutionUnique()))
                     && (AllowLeadingZeros || (!AllowLeadingZeros && IsNoLeadingZeroInTerms()))
                     && IsSolutionCorrect())
+                {
                     onSolutionFound(Equation, LetterNumberPairs.ToDictionary(entry => entry.Key, entry => entry.Value));
+                    if (FindOneSolutionOnly)
+                        break;
+                }
             }
         }
 

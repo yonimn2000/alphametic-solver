@@ -8,15 +8,17 @@ namespace YonatanMankovich.AlphametricSolver
     {
         public AlphameticEquation Equation { get; private set; }
 
-        public void SolveEquation(AlphameticEquation equation, bool allowRepeatingNumbers, bool allowLeadingZeros, Action<AlphameticEquation, Dictionary<char, byte>> onSolutionFound)
+        public void SolveEquation(AlphameticEquation equation, bool allowRepeatingNumbers, bool allowLeadingZeros, bool findOneSolutionOnly, Action<AlphameticEquation, Dictionary<char, byte>> onSolutionFound)
         {
             Equation = equation;
             AlphameticEquationSolverHelper[] alphameticEquationSolverHelpers = new AlphameticEquationSolverHelper[Environment.ProcessorCount];
-            Parallel.ForEach(alphameticEquationSolverHelpers, (alphameticEquationSolverHelper, pls, index) =>
+            Parallel.ForEach(alphameticEquationSolverHelpers, (alphameticEquationSolverHelper, state, index) =>
             {
-                alphameticEquationSolverHelper = new AlphameticEquationSolverHelper(equation, allowRepeatingNumbers, allowLeadingZeros);
+                alphameticEquationSolverHelper = new AlphameticEquationSolverHelper(equation, allowRepeatingNumbers, allowLeadingZeros, findOneSolutionOnly);
                 long triesPerProcessor = (long)Math.Pow(10, alphameticEquationSolverHelper.GetCountOfUniqueLetters()) / Environment.ProcessorCount;
                 alphameticEquationSolverHelper.Solve(index * triesPerProcessor, (index + 1) * triesPerProcessor, onSolutionFound);
+                if (findOneSolutionOnly)
+                    state.Break();
             });
         }
     }
