@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace YonatanMankovich.AlphametricSolver
+namespace YonatanMankovich.AlphameticSolver
 {
     public enum MathOperators { Add, Subtract, Multiply, Divide }
 

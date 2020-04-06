@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace YonatanMankovich.AlphametricSolver
+namespace YonatanMankovich.AlphameticSolver
 {
     public class AlphameticEquationSolverHelper
     {

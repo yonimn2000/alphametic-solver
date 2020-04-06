@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace YonatanMankovich.AlphametricSolver
+namespace YonatanMankovich.AlphameticSolver
 {
     public class AlphameticEquation
     {

@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("YonatanMankovich.AlphametricSolver")]
+[assembly: AssemblyTitle("YonatanMankovich.AlphameticSolver")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Yonatan Mankovich")]
-[assembly: AssemblyProduct("YonatanMankovich.AlphametricSolver")]
-[assembly: AssemblyCopyright("Copyright ©  2018 Yonatan Mankovich")]
+[assembly: AssemblyProduct("YonatanMankovich.AlphameticSolver")]
+[assembly: AssemblyCopyright("Copyright © Yonatan Mankovich 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

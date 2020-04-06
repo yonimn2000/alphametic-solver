@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{64150CD1-8BC3-4FCF-B2E1-D490DE394466}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>YonatanMankovich.AlphametricSolver</RootNamespace>
-    <AssemblyName>YonatanMankovich.AlphametricSolver</AssemblyName>
+    <RootNamespace>YonatanMankovich.AlphameticSolver</RootNamespace>
+    <AssemblyName>YonatanMankovich.AlphameticSolver</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

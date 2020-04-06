@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-namespace YonatanMankovich.AlphametricSolver
+namespace YonatanMankovich.AlphameticSolver
 {
     class Program
     {
